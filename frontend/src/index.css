@@ -1,0 +1,282 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-ink font-sans text-bone antialiased;
+    font-variant-numeric: tabular-nums;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  .label {
+    @apply font-display uppercase tracking-wide;
+  }
+  button {
+    @apply cursor-pointer;
+  }
+  button:disabled {
+    @apply cursor-not-allowed;
+  }
+  :focus-visible {
+    outline: 3px solid #e4570f;
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: #e4570f;
+    color: #15120e;
+  }
+  /* thin, square scrollbars that suit the board look */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #bdb5a3 transparent;
+  }
+}
+
+@layer components {
+  .stamp {
+    @apply inline-flex items-center border px-1.5 py-0.5 font-mono text-[11px] uppercase leading-none tracking-wide;
+  }
+  .hair {
+    @apply border-rule/30;
+  }
+  .rail-title {
+    @apply font-display text-sm uppercase tracking-[0.18em] text-rule;
+  }
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 border-2 px-4 font-display text-lg uppercase tracking-wide transition-colors duration-100;
+  }
+  .btn-primary {
+    @apply btn border-orange bg-orange text-ink hover:bg-bone hover:border-bone disabled:border-rule/40 disabled:bg-transparent disabled:text-rule/60;
+  }
+  .btn-go {
+    @apply btn border-green bg-green text-bone hover:bg-bone hover:text-ink hover:border-bone disabled:border-rule/40 disabled:bg-transparent disabled:text-rule/60;
+  }
+  .btn-ghost {
+    @apply btn border-rule/60 bg-transparent text-bone hover:border-bone hover:bg-bone hover:text-ink disabled:border-rule/30 disabled:text-rule/50 disabled:hover:bg-transparent;
+  }
+  .btn-danger {
+    @apply btn border-red bg-transparent text-bone hover:bg-red disabled:border-rule/30 disabled:text-rule/50 disabled:hover:bg-transparent;
+  }
+  .btn-touch {
+    @apply min-h-[56px] text-xl;
+  }
+  .tile-grid {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M32 0H0V32' fill='none' stroke='%23bdb5a3' stroke-opacity='.14'/%3E%3C/svg%3E");
+  }
+  .paper-grid {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Cpath d='M28 0H0V28' fill='none' stroke='%2315120e' stroke-opacity='.08'/%3E%3C/svg%3E");
+  }
+}
+
+/* ---- meaningful motion only ---- */
+@keyframes ring-pulse {
+  0% {
+    transform: scale(0.72);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+}
+.ring-pulse {
+  animation: ring-pulse 2.7s ease-out infinite;
+}
+@keyframes beacon {
+  0% {
+    r: 10;
+    opacity: 0.9;
+  }
+  100% {
+    r: 34;
+    opacity: 0;
+  }
+}
+.beacon {
+  animation: beacon 1.8s ease-out infinite;
+}
+@keyframes march {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+.route-march {
+  animation: march 1.4s linear infinite;
+}
+@keyframes signal-go {
+  0%,
+  35% {
+    fill: #c0182b;
+  }
+  45%,
+  100% {
+    fill: #3f7a3a;
+  }
+}
+.signal-go {
+  animation: signal-go 4.2s steps(1, end) infinite;
+}
+@keyframes flash {
+  0%,
+  49% {
+    fill: #e9a91a;
+  }
+  50%,
+  100% {
+    fill: #c0182b;
+  }
+}
+.siren-flash {
+  animation: flash 0.7s steps(1, end) infinite;
+}
+@keyframes speed {
+  from {
+    transform: translateX(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-4px);
+    opacity: 1;
+  }
+}
+.speed-lines {
+  animation: speed 0.6s linear infinite;
+}
+@keyframes alert-pulse {
+  0%,
+  100% {
+    background-color: rgba(192, 24, 43, 0.16);
+  }
+  50% {
+    background-color: rgba(192, 24, 43, 0.45);
+  }
+}
+.alert-pulse {
+  animation: alert-pulse 1.1s steps(2, end) infinite;
+}
+@keyframes amber-pulse {
+  0%,
+  100% {
+    background-color: rgba(233, 169, 26, 0.14);
+  }
+  50% {
+    background-color: rgba(233, 169, 26, 0.4);
+  }
+}
+.amber-pulse {
+  animation: amber-pulse 1.1s steps(2, end) infinite;
+}
+@keyframes chevron-move {
+  from {
+    transform: translateX(-6px);
+    opacity: 0.2;
+  }
+  to {
+    transform: translateX(6px);
+    opacity: 1;
+  }
+}
+.chevron-move {
+  animation: chevron-move 0.9s linear infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+.blink {
+  animation: blink 1s steps(1, end) infinite;
+}
+@keyframes beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.18);
+  }
+}
+.beat {
+  animation: beat 0.545s ease-in-out infinite; /* ~110 beats per minute for the CPR rhythm */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring-pulse,
+  .beacon,
+  .route-march,
+  .signal-go,
+  .siren-flash,
+  .speed-lines,
+  .alert-pulse,
+  .amber-pulse,
+  .chevron-move,
+  .blink,
+  .beat {
+    animation: none !important;
+  }
+}
+
+/* ---- map ---- */
+.leaflet-container {
+  background: #d9d1bd;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+.warm-tiles .leaflet-tile-pane {
+  filter: grayscale(0.7) sepia(0.4) contrast(0.92) brightness(0.96) saturate(0.8);
+}
+.leaflet-control-attribution {
+  background: rgba(21, 18, 14, 0.78) !important;
+  color: #ece6d8 !important;
+  font-size: 10px !important;
+}
+.leaflet-control-attribution a {
+  color: #e4570f !important;
+}
+.leaflet-bar a {
+  background: #15120e !important;
+  color: #ece6d8 !important;
+  border-color: #bdb5a3 !important;
+  border-radius: 0 !important;
+}
+.leaflet-bar {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: 1px solid #bdb5a3 !important;
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #15120e;
+  color: #ece6d8;
+  border-radius: 0;
+  box-shadow: none;
+  border: 1px solid #bdb5a3;
+}
+.leaflet-popup-content {
+  margin: 8px 10px;
+  font-size: 12px;
+}
+.rg-marker {
+  background: transparent !important;
+  border: 0 !important;
+}
+.leaflet-tooltip {
+  background: #15120e;
+  color: #ece6d8;
+  border: 1px solid #bdb5a3;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  padding: 2px 6px;
+}
+.leaflet-tooltip-top:before {
+  border-top-color: #bdb5a3;
+}

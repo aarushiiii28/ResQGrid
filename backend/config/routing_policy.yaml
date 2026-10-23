@@ -1,0 +1,32 @@
+# M20 stable-route policy. Prototype thresholds on a simulated city; not tuned on real roads.
+# Plan once, commit, and only change the route when it is clearly worth it. Every evaluation is logged to the ledger
+# with these numbers and the policy_version.
+policy_version: stable-v1
+enabled: true                # false = the older mode: route changes are only proposed by the risk monitor and applied when the driver taps
+
+evaluation:
+  interval_s: 5              # at most one logged evaluation per vehicle per this many seconds (0 = every fix)
+
+map_match:
+  snap_radius_m: 25          # a fix this close to a known route is snapped onto it (mock matcher)
+
+off_route:                   # wrong turn
+  deviation_m: 45            # further than this from the committed route...
+  consecutive_fixes: 3       # ...for this many fixes in a row...
+  max_accuracy_m: 30         # ...and only counted when GPS accuracy is at least this good (else "uncertain", no action)
+
+rejoin:                      # rejoin the original route first, replan only if clearly better
+  max_ahead_m: 1500          # candidate rejoin points up to K metres ahead
+  step_m: 150
+  max_candidates: 10
+  replan_margin_s: 30        # a full replan must beat the best rejoin by this much...
+  replan_margin_pct: 8       # ...and by this share of the remaining time
+
+congestion:                  # reroute only when worth it: ALL of these must hold
+  eta_increase_pct: 20       # remaining ETA grew by more than this share...
+  eta_increase_s: 90         # ...and by more than this many seconds
+  sustained_evaluations: 2   # on this many consecutive evaluations (hysteresis)
+  min_saving_s: 60           # the best alternative saves at least this much...
+  min_saving_pct: 15         # ...and at least this share of the remaining time
+  cooldown_s: 60             # no second reroute within this many seconds
+  final_approach_m: 300      # no congestion reroute in the last stretch (a blocked road still reroutes)

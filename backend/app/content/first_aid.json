@@ -1,0 +1,45 @@
+{
+  "label": "General guidance, follow the call-taker.",
+  "note": "Pre-written, static guidance. It does not diagnose and does not replace the call-taker or a trained responder. Not clinically validated in this prototype.",
+  "categories": [
+    {
+      "key": "cpr",
+      "title": "Not breathing / no response: chest compressions",
+      "applies_to": ["cardiac", "unconscious", "breathing", "unknown"],
+      "rhythm_bpm": 110,
+      "steps": [
+        {"text": "Lay the person on their back on a firm surface.", "say": "Lay the person on their back on a firm surface."},
+        {"text": "Kneel beside them. Put the heel of one hand on the centre of the chest, the other hand on top.", "say": "Put the heel of one hand on the centre of the chest, and the other hand on top."},
+        {"text": "Push hard and fast, about 5 cm deep, 100 to 120 times a minute. Follow the beat.", "say": "Push hard and fast in the centre of the chest. Follow the beat."},
+        {"text": "Let the chest rise fully between pushes.", "say": "Let the chest come back up between pushes."},
+        {"text": "If you are trained and willing: after 30 pushes give 2 breaths. If not, keep pushing without stopping.", "say": "If you are trained, give two breaths after thirty pushes. If not, keep pushing."},
+        {"text": "If an AED arrives, switch it on and follow its voice prompts.", "say": "If a defibrillator arrives, switch it on and follow its voice prompts."},
+        {"text": "Do not stop until the ambulance crew takes over or the person starts to move.", "say": "Do not stop until the crew takes over."}
+      ]
+    },
+    {
+      "key": "bleeding",
+      "title": "Severe bleeding",
+      "applies_to": ["trauma"],
+      "steps": [
+        {"text": "Press firmly on the wound with a clean cloth or clothing. Use your hand if you have nothing else.", "say": "Press firmly on the wound with a clean cloth."},
+        {"text": "Keep pressing. Do not lift to check.", "say": "Keep pressing. Do not lift the cloth to check."},
+        {"text": "If blood soaks through, add more cloth on top and press harder.", "say": "If blood soaks through, add more cloth on top and press harder."},
+        {"text": "Lay the person down. Keep them warm.", "say": "Lay the person down and keep them warm."},
+        {"text": "Do not remove objects stuck in the wound.", "say": "Do not remove anything stuck in the wound."}
+      ]
+    },
+    {
+      "key": "choking",
+      "title": "Choking: cannot speak, cough or breathe",
+      "applies_to": ["breathing"],
+      "steps": [
+        {"text": "If they can cough, tell them to keep coughing.", "say": "If they can cough, tell them to keep coughing."},
+        {"text": "If they cannot: lean them forward and give up to 5 firm blows between the shoulder blades.", "say": "Lean them forward and give up to five firm blows between the shoulder blades."},
+        {"text": "Still blocked: stand behind them, fist above the navel, pull sharply inwards and upwards, up to 5 times.", "say": "Stand behind them, fist above the navel, and pull sharply inwards and upwards, up to five times."},
+        {"text": "Alternate 5 back blows and 5 abdominal thrusts until the object comes out.", "say": "Alternate five back blows and five thrusts."},
+        {"text": "If they become unresponsive, tell the call-taker. Start chest compressions as guided.", "say": "If they become unresponsive, tell the call-taker."}
+      ]
+    }
+  ]
+}

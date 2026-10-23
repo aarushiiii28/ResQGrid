@@ -1,0 +1,65 @@
+# M18 false-alarm model. A prototype heuristic, NOT clinically validated. Synthetic data only.
+# Every number here is configuration; changing it changes config_hash and must be a new model_version.
+model_version: fa-v1-heuristic
+
+# Layer 1: accidental-press prevention (the caller screen reads these)
+hold_ms: 2000          # press and hold to start
+countdown_s: 10        # then a cancel window before the request goes live
+pending_grace_s: 8     # if the app never confirms or cancels, the server makes it live (fail-safe)
+
+# Layer 5: weighted logistic model. logit = bias + sum(weight * evidence), evidence in [-1, +1].
+# Positive evidence = looks genuine. A feature that is unavailable, denied or unknown has evidence 0
+# and is listed as missing: it can never lower the score.
+bias: 0.5              # no signals at all -> p = 0.62, lane UNCERTAIN (dispatch is not delayed)
+weights:
+  crash_like: 3.0
+  scream: 2.2
+  impact_transient: 1.2
+  motion_erratic: 0.9
+  speed_context: 0.6
+  touch_deliberate: 0.5
+  touch_random: 1.6
+  pocket_motion: 1.4
+  device_idle: 0.5
+  mic_silence: 0.6
+  place_risk: 0.9
+  night_time: 0.3
+  device_history: 1.3
+  corroboration: 1.6
+  checkin: 2.4
+
+# lanes by probability genuine
+lanes:
+  high_min: 0.75
+  low_max: 0.35        # below this: LOW (verify first)
+
+# hard overrides: these set a minimum lane no matter what the score says
+overrides:
+  crash_like_min: 0.6          # crash_like confidence at or above this forces HIGH
+  scream_min: 0.6              # scream evidence at or above this forces at least UNCERTAIN
+  explicit_help: HIGH
+  unanswered_checkin: UNCERTAIN
+  danger_confirmed: HIGH
+
+# Layer 4: active check-in ladder (seconds after the request went live, or after a cancel)
+checkin:
+  prompts_at_s: [0, 15, 30]
+  volume: [0.5, 0.75, 1.0]
+  unanswered_at_s: 45
+  lanes: [LOW, UNCERTAIN]      # HIGH requests are not interrupted with prompts
+low_hold_s: 45                 # LOW lane: dispatch waits for the verification window, never longer
+
+# Layer 3: context
+corroboration:
+  radius_m: 600
+  window_s: 900
+history:
+  salt: demo-synthetic-salt
+tz_offset_h: 5.5
+place_weights:        # evidence by place type, [-1, +1]
+  highway: 1.0
+  junction: 0.8
+  market: 0.2
+  residential: 0.0
+  school: -0.4
+  hospital: -0.6

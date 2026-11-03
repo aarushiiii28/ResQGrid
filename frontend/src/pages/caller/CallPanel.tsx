@@ -33,7 +33,10 @@ function kind(q: string | null): 'what' | 'state' | 'count' | null {
   return null
 }
 
-export default function CallPanel({ session, onEnded }: { session: Session; onEnded: () => void }) {
+const SAFE_AUTO_END_MS = 10_000
+
+/** `autoEnd`: the caller said they are safe. If nothing else happens for 10 s, the call ends. */
+export default function CallPanel({ session, onEnded, autoEnd = false }: { session: Session; onEnded: () => void; autoEnd?: boolean }) {
   const [lines, setLines] = useState<TranscriptLine[]>([
     { speaker: 'operator', text: session.operator, at: new Date().toISOString(), mode: 'scripted' },
   ])
@@ -144,6 +147,15 @@ export default function CallPanel({ session, onEnded }: { session: Session; onEn
     setEnded(true)
     onEnded()
   }
+
+  const endRef = useRef(end)
+  endRef.current = end
+  // any other activity (a reply, typing, the mic) restarts the 10 s; "I need help after all" clears autoEnd
+  useEffect(() => {
+    if (!autoEnd || ended || busy || listening || typed || interim) return
+    const t = setTimeout(() => void endRef.current(), SAFE_AUTO_END_MS)
+    return () => clearTimeout(t)
+  }, [autoEnd, ended, busy, listening, typed, interim, lines.length])
 
   return (
     <section aria-label="Simulated call" className="flex min-h-0 flex-col border-2 border-ink bg-paper">

@@ -4,7 +4,7 @@ import { ErrorBox, Stamp } from '../../components/ui'
 import { api } from '../../lib/api'
 import type { Aed, Tracker } from '../../lib/types'
 import CallPanel from './CallPanel'
-import CheckIn from './CheckIn'
+import CheckIn, { type CheckInView } from './CheckIn'
 import Countdown from './Countdown'
 import { AedPanel, FirstAidPanel } from './HelpPanels'
 import HoldSos from './HoldSos'
@@ -29,7 +29,9 @@ export default function CallerPage() {
   const [tracker, setTracker] = useState<Tracker | null>(null)
   const [aeds, setAeds] = useState<Aed[]>([])
   const [ended, setEnded] = useState(false)
-  const inc = sos.session?.incident_id
+  const [markedSafe, setMarkedSafe] = useState(false)
+  const onCheckIn = useCallback((v: CheckInView) => setMarkedSafe(v.checkin.state === 'safe' && v.status !== 'cancelled_by_caller'), [])
+  const inc =sos.session?.incident_id
 
   const loadAeds = useCallback(() => {
     if (!inc) return
@@ -138,8 +140,8 @@ export default function CallerPage() {
       <div className="mx-auto max-w-7xl px-3 pb-24 pt-3">
         <div className="grid gap-3 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           <div className="space-y-3">
-            <CheckIn incidentId={sos.session.incident_id} />
-            <CallPanel session={sos.session} onEnded={() => setEnded(true)} />
+            <CheckIn incidentId={sos.session.incident_id} onState={onCheckIn} />
+            <CallPanel session={sos.session} onEnded={() => setEnded(true)} autoEnd={markedSafe} />
             <SignalConsent mic={signals.mic} onAllow={() => void signals.enableMic()} onStop={signals.disableMic} />
             {sos.error && <ErrorBox message={sos.error} />}
             {(ended || closed) && (
